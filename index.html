@@ -1,0 +1,281 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School AI | Smart Learning Assistant</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(156, 163, 175, 0.3);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(156, 163, 175, 0.5);
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900 h-screen flex overflow-hidden antialiased">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar w-72 bg-white border-r border-slate-200 flex flex-col justify-between shrink-0 shadow-sm transition-colors duration-200">
+        <div class="p-5 flex flex-col gap-5 overflow-y-auto custom-scrollbar">
+            <!-- Brand -->
+            <div class="brand flex items-center gap-3">
+                <div class="logo w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white font-bold flex items-center justify-center text-sm shadow-md shadow-indigo-200">AI</div>
+                <div>
+                    <h2 class="font-bold text-slate-800 text-base leading-tight">School AI</h2>
+                    <span class="text-xs font-medium text-slate-500">Smart Learning</span>
+                </div>
+            </div>
+
+            <!-- New Chat -->
+            <button class="new-chat w-full py-2.5 px-4 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-semibold rounded-xl flex items-center justify-center gap-2 border border-indigo-200/70 transition-all duration-150 active:scale-[0.98]" id="newChatBtn">
+                <span class="text-lg leading-none font-bold">＋</span> New Chat
+            </button>
+
+            <!-- Quick Actions -->
+            <div class="flex flex-col gap-1.5">
+                <div class="side-title text-xs font-semibold text-slate-400 uppercase tracking-wider px-1">Quick Actions</div>
+
+                <button class="quick-side w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-700 font-medium hover:bg-slate-100 flex items-center gap-2.5 transition-colors group" data-prompt="Explain this topic in simple language.">
+                    <span class="text-base group-hover:scale-110 transition-transform">📖</span> Explain Topic
+                </button>
+
+                <button class="quick-side w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-700 font-medium hover:bg-slate-100 flex items-center gap-2.5 transition-colors group" data-prompt="Help me solve this problem step by step.">
+                    <span class="text-base group-hover:scale-110 transition-transform">🧮</span> Solve Problem
+                </button>
+
+                <button class="quick-side w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-700 font-medium hover:bg-slate-100 flex items-center gap-2.5 transition-colors group" data-prompt="Create 10 difficult MCQs for me.">
+                    <span class="text-base group-hover:scale-110 transition-transform">📝</span> Generate MCQs
+                </button>
+
+                <button class="quick-side w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-700 font-medium hover:bg-slate-100 flex items-center gap-2.5 transition-colors group" data-prompt="Start an interactive quiz for me. Ask one question at a time.">
+                    <span class="text-base group-hover:scale-110 transition-transform">🎯</span> Start Quiz
+                </button>
+
+                <button class="quick-side w-full text-left px-3 py-2.5 rounded-lg text-sm text-slate-700 font-medium hover:bg-slate-100 flex items-center gap-2.5 transition-colors group" data-prompt="Create short revision notes about this topic.">
+                    <span class="text-base group-hover:scale-110 transition-transform">📚</span> Make Notes
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar Bottom Controls -->
+        <div class="sidebar-bottom p-4 border-t border-slate-100 flex flex-col gap-1.5 bg-slate-50/50">
+            <button id="themeBtn" class="side-control w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 flex items-center gap-2.5 transition-colors">
+                <span class="text-base">🌙</span> Dark Mode
+            </button>
+            <button id="clearBtn" class="side-control w-full text-left px-3 py-2 rounded-lg text-sm font-medium text-rose-600 hover:bg-rose-50 flex items-center gap-2.5 transition-colors">
+                <span class="text-base">🗑️</span> Clear Chat
+            </button>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main flex-1 flex flex-col h-full bg-slate-50 overflow-hidden">
+        <!-- HEADER -->
+        <header class="topbar h-16 bg-white border-b border-slate-200 px-8 flex items-center justify-between shrink-0 shadow-sm">
+            <div>
+                <h1 class="text-base font-bold text-slate-900">School AI Assistant</h1>
+                <p class="text-xs text-slate-500">Your personal AI learning companion</p>
+            </div>
+
+            <div class="status flex items-center gap-2 bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-semibold border border-emerald-200/80">
+                <span class="status-dot w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                AI Online
+            </div>
+        </header>
+
+        <!-- CHAT SECTION -->
+        <section class="chat-container flex-1 flex flex-col max-w-4xl w-full mx-auto p-6 overflow-hidden">
+            <!-- Messages Scroll Area -->
+            <div id="chatBox" class="chat-box flex-1 overflow-y-auto custom-scrollbar flex flex-col gap-6 pr-2 mb-4">
+                
+                <!-- Welcome Message -->
+                <div class="message ai-message flex items-start gap-4">
+                    <div class="avatar w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-sm mt-1">
+                        AI
+                    </div>
+                    <div class="bubble bg-white border border-slate-200/90 rounded-2xl rounded-tl-sm p-5 shadow-sm max-w-2xl text-slate-800 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <strong class="text-sm font-bold text-indigo-700">School AI</strong>
+                            <span class="text-[11px] text-slate-400">Just now</span>
+                        </div>
+                        <p class="text-sm leading-relaxed text-slate-700">
+                            Hello! 👋 I'm your School AI Assistant. Ask me anything about Mathematics, Physics, Chemistry, Biology, Hindi, English, Computer Science and many other subjects.
+                        </p>
+                        <p class="text-sm leading-relaxed text-slate-700">
+                            You can also ask me to explain concepts, solve problems, generate MCQs or prepare a study plan.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Footer Area: Suggestions + Input -->
+            <div class="shrink-0 space-y-3 pt-2">
+                <!-- QUICK PROMPTS -->
+                <div class="suggestions flex flex-wrap gap-2">
+                    <button class="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 text-slate-700 text-xs font-medium rounded-full border border-slate-200 shadow-xs transition-all active:scale-95" data-prompt="Explain photosynthesis in simple Hindi">
+                        🌱 Photosynthesis
+                    </button>
+                    <button class="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 text-slate-700 text-xs font-medium rounded-full border border-slate-200 shadow-xs transition-all active:scale-95" data-prompt="Explain Newton's laws with examples">
+                        ⚛️ Newton's Laws
+                    </button>
+                    <button class="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 text-slate-700 text-xs font-medium rounded-full border border-slate-200 shadow-xs transition-all active:scale-95" data-prompt="Help me solve a mathematics problem">
+                        🧮 Mathematics
+                    </button>
+                    <button class="px-3.5 py-1.5 bg-white hover:bg-indigo-50 hover:border-indigo-300 hover:text-indigo-700 text-slate-700 text-xs font-medium rounded-full border border-slate-200 shadow-xs transition-all active:scale-95" data-prompt="Explain an important chemistry topic">
+                        🧪 Chemistry
+                    </button>
+                </div>
+
+                <!-- INPUT BOX -->
+                <div class="input-area relative bg-white border border-slate-300 rounded-2xl shadow-sm focus-within:border-indigo-500 focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
+                    <textarea
+                        id="userInput"
+                        placeholder="Ask your question..."
+                        rows="2"
+                        class="w-full resize-none bg-transparent px-4 py-3 pr-14 text-sm text-slate-800 placeholder-slate-400 focus:outline-none custom-scrollbar"
+                    ></textarea>
+
+                    <button 
+                        id="sendBtn" 
+                        class="send-btn absolute right-2.5 bottom-2.5 w-9 h-9 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white rounded-xl flex items-center justify-center shadow-sm transition-all active:scale-95 disabled:opacity-50"
+                        title="Send question"
+                    >
+                        <svg class="w-4 h-4 translate-x-px" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="input-info text-center text-[11px] text-slate-400 font-medium">
+                    School AI can make mistakes. Verify important information.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Client-side interaction logic -->
+    <script>
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const themeBtn = document.getElementById('themeBtn');
+
+        function appendUserMessage(text) {
+            const userMsg = document.createElement('div');
+            userMsg.className = 'message flex items-start justify-end gap-3';
+            userMsg.innerHTML = `
+                <div class="bubble bg-indigo-600 text-white rounded-2xl rounded-tr-sm p-4 shadow-sm max-w-xl text-sm leading-relaxed">
+                    <p>${text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
+                </div>
+            `;
+            chatBox.appendChild(userMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function appendAiResponse(replyText) {
+            const aiMsg = document.createElement('div');
+            aiMsg.className = 'message ai-message flex items-start gap-4';
+            aiMsg.innerHTML = `
+                <div class="avatar w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-sm mt-1">
+                    AI
+                </div>
+                <div class="bubble bg-white border border-slate-200/90 rounded-2xl rounded-tl-sm p-5 shadow-sm max-w-2xl text-slate-800 space-y-2">
+                    <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                        <strong class="text-sm font-bold text-indigo-700">School AI</strong>
+                        <span class="text-[11px] text-slate-400">Just now</span>
+                    </div>
+                    <p class="text-sm leading-relaxed text-slate-700">${replyText}</p>
+                </div>
+            `;
+            chatBox.appendChild(aiMsg);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function handleSend() {
+            const text = userInput.value.trim();
+            if (!text) return;
+            appendUserMessage(text);
+            userInput.value = '';
+            
+            setTimeout(() => {
+                appendAiResponse(`I received your request: "${text}". Here is a clear, step-by-step breakdown designed to help you master this concept! Let me know if you want practice questions or revision notes.`);
+            }, 600);
+        }
+
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                handleSend();
+            }
+        });
+
+        document.querySelectorAll('.suggestions button, .quick-side').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const prompt = btn.getAttribute('data-prompt');
+                if (prompt) {
+                    userInput.value = prompt;
+                    userInput.focus();
+                }
+            });
+        });
+
+        clearBtn.addEventListener('click', () => {
+            chatBox.innerHTML = `
+                <div class="message ai-message flex items-start gap-4">
+                    <div class="avatar w-9 h-9 rounded-xl bg-gradient-to-tr from-indigo-600 to-violet-500 text-white font-bold flex items-center justify-center text-xs shrink-0 shadow-sm mt-1">
+                        AI
+                    </div>
+                    <div class="bubble bg-white border border-slate-200/90 rounded-2xl rounded-tl-sm p-5 shadow-sm max-w-2xl text-slate-800 space-y-3">
+                        <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                            <strong class="text-sm font-bold text-indigo-700">School AI</strong>
+                            <span class="text-[11px] text-slate-400">Chat reset</span>
+                        </div>
+                        <p class="text-sm leading-relaxed text-slate-700">
+                            Chat cleared! What topic or problem would you like help with next?
+                        </p>
+                    </div>
+                </div>
+            `;
+        });
+    </script>
+</body>
+</html>
